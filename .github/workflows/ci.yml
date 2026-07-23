@@ -35,6 +35,7 @@ jobs:
         env:
           OPENAI_API_KEY: "test-placeholder-key"
           VECTOR_DB_TYPE: "faiss"
+          PYTHONPATH: .
         run: pytest tests/ -v --tb=short --cov=core --cov=utils --cov-report=term-missing
 
   lint:
