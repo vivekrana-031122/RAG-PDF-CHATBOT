@@ -1,71 +1,60 @@
-# Production-Grade Secure RAG PDF Chatbot Service
+# RAG PDF Chatbot
 
-[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Tech: FastAPI](https://img.shields.io/badge/Tech-FastAPI-brightgreen.svg)](#)
+A production-ready Retrieval-Augmented Generation (RAG) system running a Streamlit UI frontend and a FastAPI REST API backend. 
 
-A secure Retrieval-Augmented Generation (RAG) service allowing users to chat with uploaded PDF documents via Streamlit UI or FastAPI endpoints.
+## Features
+- **Dual Interface:** Chat through the beautiful Streamlit wrapper, or interact programmatically via REST `/ask`.
+- **Source Tracking:** The bot returns the exact filename and page number it used to synthesize the answer.
+- **Persistent Vectors:** Embeddings are cached to FAISS locally.
 
----
+## Local Setup
 
-## 🚀 Features
-
-* Encapsulates FastAPI REST backend and Streamlit interactive frontend interfaces
-* Validates user session directories using strict UUID verification checks
-* Saves vector database caches and session history logs persistently on disk
-* Supports instant local deployment using Docker and Docker Compose
-* Configured to respect API keys via environment variable `.env` configs
-
----
-
-## 🛠️ Tech Stack & Libraries
-* **Language:** Python 3.8+
-* **Libraries:** FastAPI, Streamlit, LangChain, FAISS, OpenAI, Docker, Python
-
----
-
-## 📦 Installation & Setup
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/vivekrana-031122/rag-pdf-chatbot.git
-   cd rag-pdf-chatbot
-   ```
-
-2. **Create and Activate a Virtual Environment:**
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
-
-3. **Install Dependencies:**
+1. **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
+2. **Add OpenAI Key:**
+   Rename `.env.example` to `.env` and paste your `OPENAI_API_KEY`.
 
-4. **Additional Setup (if applicable):**
-   * If using Playwright:
-     ```bash
-     playwright install chromium
-     ```
+3. **Run the API Backend:**
+   ```bash
+   uvicorn api:app --reload
+   ```
+   *Available at `http://localhost:8000/docs`*
 
----
+4. **Run the Streamlit UI:**
+   ```bash
+   streamlit run app.py
+   ```
+   *Available at `http://localhost:8501`*
 
-## 💻 Usage Example
+## 🧪 Testing
 
-Run the main scraper entry point:
+We use `pytest` for automated testing. To run the integration and unit tests:
 ```bash
-docker-compose up --build
+pytest tests/
 ```
 
----
+## 🐳 Docker Deployment
 
-## 🛡️ Disclaimer & Robots.txt Compliance
+The application is fully containerized using a dual-container `docker-compose.yml` orchestrating both the FastAPI and Streamlit services. 
 
-This project is created for educational and professional demonstration purposes. By using this tool, you agree to:
-* Respect the target website's `robots.txt` directives.
-* Avoid making aggressive requests that could disrupt target servers (configure appropriate sleep intervals/throttling).
-* Comply with local web data protection regulations and the platform's terms of service.
+1. Ensure your `.env` contains your `OPENAI_API_KEY`.
+2. Run Docker Compose:
+   ```bash
+   docker-compose up --build -d
+   ```
+3. **Streamlit UI** will be available at port `8501`.
+4. **FastAPI Docs** will be available at port `8000`.
+
+### Deploying to Render / Railway
+Both platforms support deploying straight from the GitHub repo using `docker-compose`. Simply connect your repository, configure the deployment to use `docker-compose.yml`, and inject `OPENAI_API_KEY` into your environment secrets.
+
+### Deploying to Hugging Face Spaces
+If you only want to showcase the UI, you can deploy the Streamlit app to Hugging Face Spaces using the `Dockerfile.ui` or native Streamlit app settings.
+
+## Folder Structure
+- `app.py`: Streamlit frontend application.
+- `api.py`: FastAPI REST endpoint application.
+- `core/`: RAG pipelines, session memory, and LLM chains.
+- `tests/`: Automated unit and integration testing suite.

@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: rag-chatbot-api
+    env: docker
+    dockerfilePath: Dockerfile.api
+    plan: free
+    healthCheckPath: /docs
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: VECTOR_DB_TYPE
+        value: faiss
+      - key: PINECONE_API_KEY
+        sync: false
+
+  - type: web
+    name: rag-chatbot-ui
+    env: docker
+    dockerfilePath: Dockerfile.ui
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
